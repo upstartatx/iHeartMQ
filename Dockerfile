@@ -64,11 +64,8 @@ RUN addgroup -S nginx \
 	&& install -m644 html/50x.html /usr/share/nginx/html/ \
 	&& strip /usr/sbin/nginx* \
 	&& rm -rf /usr/src/nginx-$NGINX_VERSION \
-	&& rm -rf /tmp/nchan-$NCHAN_VERSION \
-	&& apk add --no-cache --virtual .gettext gettext \
-	&& mv /usr/bin/envsubst /tmp/ \
-		&& runDeps="$( \
-		scanelf --needed --nobanner /usr/sbin/nginx /usr/lib/nginx/modules/*.so /tmp/envsubst \
+	&& runDeps="$( \
+		scanelf --needed --nobanner /usr/sbin/nginx \
 			| awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
 			| sort -u \
 			| xargs -r apk info --installed \
@@ -76,10 +73,9 @@ RUN addgroup -S nginx \
 	)" \
 	&& apk add --no-cache --virtual .nginx-rundeps $runDeps \
 	&& apk del .build-deps \
-	&& apk del .gettext \
-	&& mv /tmp/envsubst /usr/local/bin/ \
-		&& ln -sf /dev/stdout /var/log/nginx/access.log \
-	&& ln -sf /dev/stderr /var/log/nginx/error.log
+	&& ln -sf /dev/stdout /var/log/nginx/access.log \
+	&& ln -sf /dev/stderr /var/log/nginx/error.log \
+	&& rm -rf /tmp/*
 
 COPY *.conf /etc/nginx/
 
