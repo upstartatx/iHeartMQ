@@ -1,6 +1,6 @@
 FROM alpine:3.5
 
-MAINTAINER Anton Tyutin "anton@tyutin.ru"
+MAINTAINER Michael Smith "mikesmith.cs@gmail.com"
 
 ENV NGINX_VERSION 1.10.2
 ENV NCHAN_VERSION 1.1.0
